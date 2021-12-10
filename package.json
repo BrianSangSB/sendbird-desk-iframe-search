@@ -1,0 +1,24 @@
+{
+  "name": "sendbird-desk-iframe-search",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/charisTheo/sendbird-desk-iframe-search.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/charisTheo/sendbird-desk-iframe-search/issues"
+  },
+  "homepage": "https://github.com/charisTheo/sendbird-desk-iframe-search#readme",
+  "dependencies": {
+    "sendbird": "^3.1.2",
+    "sendbird-desk": "^1.0.19"
+  }
+}
