@@ -15,6 +15,7 @@ const searchWrapper = document.querySelector('.search-wrapper')
 const ticketSearchInput = document.querySelector('#ticket-search')
 const resultsWrapper = document.querySelector('#results-wrapper')
 const resultsList = document.querySelector('#results-list')
+const agentIdEl = document.querySelector('#agent-id')
 
 var tickets = JSON.parse(localStorage.getItem('tickets')) || null
 getSavedCredentials()
@@ -56,6 +57,7 @@ function hideLogin() {
 }
 function showSearch() {
   searchWrapper.style.display = 'block'
+  agentIdEl.innerHTML = agentId
 }
 function hideSearch() {
   searchWrapper.style.display = 'none'
@@ -64,8 +66,9 @@ function showResults() {
   resultsList.innerHTML = tickets && tickets.length
     ? tickets.map(ticket => `
         <li class="result-list-item">
-          <a href="https://dashboard.sendbird.com/${APP_ID}/desk/tickets/${ticket.id}" target='_parent'>
+          <a href="https://dashboard.sendbird.com/${APP_ID}/desk/tickets/${ticket.id}" target='_blank'>
             ${ticket.channelName} | <span>${ticket.group.name}</span> | <span>${ticket.status2}</span>
+            ↗
           </a>
         </li>
       `).join('')
@@ -95,7 +98,7 @@ async function getTickets(q, _next) {
   const params = {
     q,
     limit: 100,
-    next: _next,
+    next: _next || "",
     agent: agentId,
   }
   const urlParamsString = new URLSearchParams(params).toString()
@@ -139,6 +142,7 @@ function getSavedCredentials() {
   loginDeskApiTokenInput.value = DESK_API_TOKEN
   if (APP_ID && DESK_API_TOKEN) {
     loginButton.disabled = false
+    init()
   }
 }
 function saveCredentials() {
