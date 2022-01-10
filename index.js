@@ -17,7 +17,7 @@ const resultsWrapper = document.querySelector('#results-wrapper')
 const resultsList = document.querySelector('#results-list')
 const agentIdEl = document.querySelector('#agent-id')
 
-var tickets = JSON.parse(localStorage.getItem('tickets')) || null
+var tickets = []
 getSavedCredentials()
 
 /* ------------- Event listeners ------------- */
@@ -40,13 +40,9 @@ function ticketSearchInputHandler() {
 }
 async function init() {
   hideResults()
-  hideSearch()
   getDataFromUrl()
   saveCredentials()
 
-  if (!tickets) {
-    await getTickets()
-  }
   hideLogin()
   showSearch()
 }
@@ -94,15 +90,20 @@ async function searchTickets(searchTerm) {
   }, 500)
 }
 async function getTickets(q, _next) {
+  if (!q) {
+    tickets = []
+    showResults()
+    return
+  }
+
   // More parameters here: https://sendbird.com/docs/desk/v1/platform-api/guides/ticket#2-list-tickets-3-parameters
   const params = {
     q,
     limit: 100,
-    next: _next || "",
     agent: agentId,
   }
   const urlParamsString = new URLSearchParams(params).toString()
-  const apiRoute = `https://desk-api-${APP_ID}.sendbird.com/platform/v1/tickets?${urlParamsString}`
+  const apiRoute = _next || `https://desk-api-${APP_ID}.sendbird.com/platform/v1/tickets?${urlParamsString}`
 
   const response = await fetch(apiRoute, {
     headers: { 'SENDBIRDDESKAPITOKEN': DESK_API_TOKEN },
@@ -120,13 +121,12 @@ async function getTickets(q, _next) {
   const { results, next } = await response.json()
   tickets = [...results]
   if (next) {
-    tickets.push(...await getTickets(q, next))
+    const nextTickets = await getTickets(q, next)
+    tickets.push(...nextTickets)
   }
 
-  if (!q) {
-    localStorage.setItem('tickets', JSON.stringify(tickets))
-  }
   showResults()
+  return results
 }
 function getDataFromUrl () {
   const url = new URL(document.location.href)

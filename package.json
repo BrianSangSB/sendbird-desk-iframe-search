@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/charisTheo/sendbird-desk-iframe-search#readme",
   "dependencies": {
-    "sendbird": "^3.1.2",
+    "sendbird": "^3.1.4",
     "sendbird-desk": "^1.0.19"
   }
 }
